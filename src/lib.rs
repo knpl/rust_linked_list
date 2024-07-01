@@ -121,13 +121,13 @@ impl<T> List<T> {
             current = current.next.as_mut().unwrap();
         }
 
-        return match current.next.take() {
+        match current.next.take() {
             None => None,
             Some(to_remove) => {
                 current.next = to_remove.next;
                 Some(to_remove.elem)
             }
-        };
+        }
     }
 }
 
@@ -276,14 +276,14 @@ mod tests {
     }
 
     #[test]
-    fn insert_intermediate_item() {
+    fn insert_intermediate_item() -> Result<(), InsertionError> {
         // Arrange
         let mut list: List<i32> = List::new();
         list.append(1);
         list.append(3);
 
         // Act
-        list.insert(1, 2).expect("Insertion error");
+        list.insert(1, 2)?;
 
         // Assert
         let first_node = list.head.expect("Empty list");
@@ -293,10 +293,11 @@ mod tests {
         assert_eq!(second_node.elem, 2);
         assert_eq!(third_node.elem, 3);
         assert!(third_node.next.is_none());
+        Ok(())
     }
 
     #[test]
-    fn insert_before_last() {
+    fn insert_before_last() -> Result<(), InsertionError> {
         // Arrange
         let mut list: List<i32> = List::new();
         for i in 1..=10 {
@@ -304,11 +305,12 @@ mod tests {
         }
 
         // Act
-        list.insert(9, 42).expect("Insertion error");
+        list.insert(9, 42)?;
 
         // Assert
         assert_eq!(*list.get(9).unwrap(), 42);
         assert_eq!(*list.get(10).unwrap(), 10);
+        Ok(())
     }
 
     #[test]
